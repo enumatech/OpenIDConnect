@@ -1,6 +1,6 @@
 {
   "name": "openid-connect",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "keywords": [
     "oauth",
     "oauth2",
@@ -14,10 +14,10 @@
     "openid connect"
   ],
   "description": "This is an fully functional OAuth 2 server implementation, with support for OpenID Connect specification. Based on https://github.com/ammmir/node-oauth2-provider.",
-  "homepage": "https://github.com/agmoyano/OpenIDConnect",
+  "homepage": "https://github.com/enumatech/OpenIDConnect",
   "repository": {
     "type": "git",
-    "url": "https://github.com/agmoyano/OpenIDConnect.git"
+    "url": "https://github.com/enumatech/OpenIDConnect.git"
   },
   "author": {
     "name": "Agustín Moyano"
