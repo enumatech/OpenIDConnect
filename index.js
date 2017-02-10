@@ -565,12 +565,8 @@ OpenIDConnect.prototype.auth = function() {
 
                                             //TODO: if(auth && auth.status == 'created') {
                                             req.model.auth.native(function(err, redis) {
-                                                if (err) console.log('err2',err);
                                                 var tok = 'waterline:auth:id:'+auth.id;
-                                                console.log('tok2',tok);
-                                                redis.expire(tok, 60*10, function(err, result){
-                                                    console.log('redis2',err, result);
-                                                });
+                                                redis.expire(tok, 60*10);
                                             }); //10 minutes
 
                                             def.resolve({code: token});
@@ -619,12 +615,8 @@ OpenIDConnect.prototype.auth = function() {
                                         if(!err && access) {
 
                                             req.model.access.native(function(err, redis) {
-                                                if (err) console.log(err);
                                                 var tok = 'waterline:access:id:'+access.id;
-                                                console.log('tok',tok);
-                                                redis.expire(tok, obj.expiresIn, function(err, result){
-                                                    console.log('redis',result);
-                                                });
+                                                redis.expire(tok, obj.expiresIn);
                                             });
 
                                             def.resolve({
@@ -919,12 +911,8 @@ OpenIDConnect.prototype.token = function() {
 
                             // FIXME: destroy refresh.auth iff no accessTokens and no refreshTokens
                             req.model.refresh.native(function(err, redis) {
-                                if (err) console.log('err3',err);
                                 var tok = 'waterline:refresh:id:'+refresh.id;
-                                console.log('tok3',tok);
-                                redis.expire(tok, 5*3600, function(err, result){
-                                    console.log('redis3',result);
-                                });
+                                redis.expire(tok, 5*3600);
                             });
 
                             var d = Math.round(new Date().getTime()/1000);
@@ -954,12 +942,8 @@ OpenIDConnect.prototype.token = function() {
 
                                     // FIXME: destroy acccess.auth iff no accessTokens and no refreshTokens
                                     req.model.access.native(function(err, redis) {
-                                        if (err) console.log('err4',err);
                                         var tok = 'waterline:access:id:'+access.id;
-                                        console.log('tok4',tok);
-                                        redis.expire(tok, 3600, function(err, result){
-                                            console.log('redis4',err, result);
-                                        });
+                                        redis.expire(tok, access.expiresIn);
                                     });
 
                                     res.json({
