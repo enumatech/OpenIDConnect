@@ -66,6 +66,7 @@ var defaults = {
                         family_name: {type: 'string', required: true},
                         profile: 'string',
                         email: {type: 'email', required: true, unique: true},
+                        email_verified: {type: 'boolean', defaultsTo: false},
                         password: 'string',
                         picture: 'binary',
                         birthdate: 'date',
@@ -1087,15 +1088,17 @@ OpenIDConnect.prototype.userInfo = function() {
                 .exec(function(err, access) {
                     if(!err && access) {
                         req.model.user.findOne({id: access.user}, function(err, user) {
-                            if(req.check.scopes.indexOf('profile') != -1) {
+                            if(req.check.scopes.indexOf('profile') !== -1) {
                                 delete user.id;
                                 delete user.password;
                                 delete user.openidProvider;
-                            } else {
-                                user = {email: user.email};
+                            }
+                            else {
+                                user = {email: user.email, email_verified: user.email_verified};
                             }
                             if(req.check.scopes.indexOf('email') === -1) {
                                 delete user.email;
+                                delete user.email_verified;
                             }
                             // 2.3.2. "The sub (subject) Claim MUST always be returned in the UserInfo Response."
                             user.sub = req.session.sub||req.session.user;
