@@ -1088,14 +1088,15 @@ OpenIDConnect.prototype.userInfo = function() {
                     if(!err && access) {
                         req.model.user.findOne({id: access.user}, function(err, user) {
                             if(req.check.scopes.indexOf('profile') != -1) {
-                                user.sub = req.session.sub||req.session.user;
                                 delete user.id;
                                 delete user.password;
                                 delete user.openidProvider;
-                                res.json(user);
                             } else {
-                                res.json({email: user.email});
+                                user = {email: user.email};
                             }
+                            // 2.3.2. "The sub (subject) Claim MUST always be returned in the UserInfo Response."
+                            user.sub = req.session.sub||req.session.user;
+                            res.json(user);
                         });
                     } else {
                         self.errorHandle(res, null, 'unauthorized_client', 'Access token is not valid.');
