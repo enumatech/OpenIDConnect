@@ -1094,6 +1094,9 @@ OpenIDConnect.prototype.userInfo = function() {
                             } else {
                                 user = {email: user.email};
                             }
+                            if(req.check.scopes.indexOf('email') === -1) {
+                                delete user.email;
+                            }
                             // 2.3.2. "The sub (subject) Claim MUST always be returned in the UserInfo Response."
                             user.sub = req.session.sub||req.session.user;
                             res.json(user);
