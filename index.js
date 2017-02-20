@@ -1087,15 +1087,26 @@ OpenIDConnect.prototype.userInfo = function() {
                 .exec(function(err, access) {
                     if(!err && access) {
                         req.model.user.findOne({id: access.user}, function(err, user) {
-                            if(req.check.scopes.indexOf('profile') != -1) {
+                            // 2.3.2. "The sub (subject) Claim MUST always be returned in the UserInfo Response."
+                            if(typeof user.sub === 'function') {
+                                user.sub = user.sub();
+                            }
+                            if(req.check.scopes.indexOf('profile') !== -1) {
                                 delete user.id;
                                 delete user.password;
                                 delete user.openidProvider;
-                            } else {
-                                user = {email: user.email};
                             }
-                            // 2.3.2. "The sub (subject) Claim MUST always be returned in the UserInfo Response."
-                            user.sub = req.session.sub||req.session.user;
+                            else {
+                                user = {
+                                    sub: user.sub,
+                                    email: user.email,
+                                    email_verified: user.email_verified,
+                                };
+                            }
+                            if(req.check.scopes.indexOf('email') === -1) {
+                                delete user.email;
+                                delete user.email_verified;
+                            }
                             res.json(user);
                         });
                     } else {
