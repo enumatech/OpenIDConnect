@@ -1070,13 +1070,14 @@ OpenIDConnect.prototype.check = function() {
 OpenIDConnect.prototype.userInfo = function() {
     var self = this;
     return [
-            self.check('openid', /profile|email/),
+            self.check('openid'),
             self.use({policies: {loggedIn: false}, models: ['access', 'user']}),
             function(req, res, next) {
                 req.model.access.findOne({token: req.parsedParams.access_token})
                 .exec(function(err, access) {
                     if(!err && access) {
                         req.model.user.findOne({id: access.user}, function(err, user) {
+
                             // 2.3.2. "The sub (subject) Claim MUST always be returned in the UserInfo Response."
                             if(typeof user.sub === 'function') {
                                 user.sub = user.sub();
