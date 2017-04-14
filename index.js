@@ -519,7 +519,7 @@ OpenIDConnect.prototype.auth = function() {
                                 }
                                 if(redirect) {
                                     req.session.client_key = params.client_id;
-                                    var q = req.path+'?'+querystring.stringify(params);
+                                    var q = req.baseUrl+req.path+'?'+querystring.stringify(params);
                                     deferred.reject({type: 'redirect', uri: self.settings.consent_url+'?'+querystring.stringify({return_url: q})});
                                 } else {
                                     deferred.resolve(params);
